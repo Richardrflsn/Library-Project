@@ -43,13 +43,16 @@ void menu(){
     int option;
     do
     {
-        printf("%64s\n", "1. User login");
+        printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0;36m\n");
+        printMessageCenter("Main Menu");
+        printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0m\n");
+        printf("\033[0;37m%64s\n", "1. User login");
         printf("%64s\n", "2. View Books");
         printf("%66s\n", "3. Search Books");
         printf("%66s\n", "4. Borrow Books");
-        printf("%58s\n", "5. Exit");
-        printf("\n\n%65s", "Enter option -> ");
-        scanf("%d", &option);
+        printf("%58s\033[0m\n", "5. Exit");
+        printf("\n\n\033[1;32m%65s", "Enter option -> ");
+        scanf("%d\033[0m", &option);
         switch (option)
         {
         case 1:
@@ -65,10 +68,11 @@ void menu(){
             /* code */
             break;
         case 5:
-            /* code */
+            printf("\n\n\n\033[1;33m%73s\n\n\n", "Thank You, Please Come Again!!");
             break;
         
         default:
+            printf("\n\n\n\033[0;31m%73s\n", "INVALID INPUT!!! Try again...");
             break;
         }
     } while (option != 5);
