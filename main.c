@@ -38,25 +38,79 @@ void welcomeMessage(){
     getchar();
 }
 
+// Sign up and log in module
+void signuplogin(){
+    int option;
+    struct user
+    {
+        char newUsername[100];
+        char newPassword[100];
+        char username[100];
+        char Password[100];
+    } account;
+    
+    FILE* file = fopen("accountdata.txt", "a+");
+    printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0;36m\n");
+    printMessageCenter("Sign up & Log in");
+    printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0m\n");
+    printf("\n\033[0;37m%59s\n", "1. Sign up");
+    printf("%58s\n", "2. Log in");
+    printf("%56s\n", "3. Back");
+    printf("\n\n%63s","Enter option -> ");
+    scanf("%d", &option);
+    switch (option)
+    {
+    case 1:
+        printf("Enter your new username\n");
+        fscanf(stdin, "%s", account.newUsername);
+        printf("Enter your new password\n");
+        fscanf(stdin, "%s", account.newPassword);
+        fprintf(file, "%s - %s\n", account.newUsername, account.newPassword);
+        break;
+    case 2:
+        printf("Enter your username: ");
+        scanf("%s", account.username);
+        printf("Enter your password: ");
+        scanf("%s", account.Password);
+        FILE* file = fopen("accountdata.txt", "r");
+        while (fscanf(file, "%s - %s\n", account.newUsername, account.newPassword) == 2); //check file
+        if (strcmp(account.newUsername, account.username) == 0 && strcmp(account.newPassword, account.Password) == 0)
+        {
+            printf("Login successfull!\n");
+        } else
+        {
+            printf("Login failed!\n");
+        }
+        break;
+    case 3:
+        /* code */
+        break;
+    
+    default:
+        printf("INVALID INPUT!!! Try again...");
+        break;
+    }
+    fclose(file);
+}
+
+// Main menu library
 void menu(){
     headMessage("Main Menu");
     int option;
     do
     {
-        printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0;36m\n");
-        printMessageCenter("Main Menu");
-        printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0m\n");
-        printf("\033[0;37m%64s\n", "1. User login");
-        printf("%64s\n", "2. View Books");
-        printf("%66s\n", "3. Search Books");
-        printf("%66s\n", "4. Borrow Books");
-        printf("%58s\033[0m\n", "5. Exit");
-        printf("\n\n\033[1;32m%65s", "Enter option -> ");
-        scanf("%d\033[0m", &option);
+        printf("\n\033[0;37m%68s\n", "1. Sign up & Log in");
+        printf("%62s\n", "2. View Books");
+        printf("%64s\n", "3. Search Books");
+        printf("%64s\n", "4. Borrow Books");
+        printf("%56s\033[0m\n", "5. Exit");
+        printf("\n\n\033[1;32m%63s", "Enter option -> ");
+        scanf("%d", &option);
+        printf("\033[0m");
         switch (option)
         {
         case 1:
-            /* code */
+            signuplogin();
             break;
         case 2:
             /* code */
