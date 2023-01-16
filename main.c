@@ -40,13 +40,13 @@ void welcomeMessage(){
 
 // Sign up and log in module
 void signuplogin(){
-    int option;
+    int option, key;
     struct user
     {
-        char newUsername[100];
-        char newPassword[100];
-        char username[100];
-        char Password[100];
+        char newUsername[1000];
+        char newPassword[1000];
+        char username[1000];
+        char Password[1000];
     } account;
     
     FILE* file = fopen("accountdata.txt", "a+");
@@ -75,13 +75,19 @@ void signuplogin(){
         printMessageCenter("Enter your password : ");
         scanf("%s", account.Password);
         FILE* file = fopen("accountdata.txt", "r");
-        while (fscanf(file, "%s - %s\n", account.newUsername, account.newPassword) == 2); //check file
-        if (strcmp(account.newUsername, account.username) == 0 && strcmp(account.newPassword, account.Password) == 0)
+        while (fscanf(file,
+         "%s - %s\n", account.newUsername, account.newPassword) == 2); //check file
+        if (strcmp(account.username, account.newUsername) == 0 && strcmp(account.Password, account.newPassword) == 0)
         {
-            printf("\n\033[1;32m%68s\n\033[0;37m", "Login successfull!");
+            printf("\n\033[1;32m%67s\n\033[0;37m", "Login successfull!");
         } else
         {
             printf("\n\033[0;31m%65s\n\033[0;37m", "Login failed!");
+        }
+        if (strcmp("adminOracle", account.username) == 0 && strcmp("12345" ,account.Password) == 0)
+        {
+            printMessageCenter("You are now login as admin");
+            printf("\n");
         }
         break;
     case 3:
