@@ -117,7 +117,6 @@ void menu(){
         printf("%64s\n", "4. Borrow Books");
         printf("%61s\n", "5. Add Books");
         printf("%56s\033[0m\n", "6. Exit");
-        printf("%d", key);
         printf("\n\n\033[1;32m%63s", "Enter option -> ");
         scanf("%d", &option);
         printf("\033[0m");
