@@ -61,29 +61,30 @@ void signuplogin(){
     switch (option)
     {
     case 1:
-        printf("Enter your new username\n");
+        printf("\n");
+        printMessageCenter("Enter your new username : ");
         fscanf(stdin, "%s", account.newUsername);
-        printf("Enter your new password\n");
+        printMessageCenter("Enter your new password : ");
         fscanf(stdin, "%s", account.newPassword);
         fprintf(file, "%s - %s\n", account.newUsername, account.newPassword);
         break;
     case 2:
-        printf("Enter your username: ");
+        printf("\n");
+        printMessageCenter("Enter your username : ");
         scanf("%s", account.username);
-        printf("Enter your password: ");
+        printMessageCenter("Enter your password : ");
         scanf("%s", account.Password);
         FILE* file = fopen("accountdata.txt", "r");
         while (fscanf(file, "%s - %s\n", account.newUsername, account.newPassword) == 2); //check file
         if (strcmp(account.newUsername, account.username) == 0 && strcmp(account.newPassword, account.Password) == 0)
         {
-            printf("Login successfull!\n");
+            printf("\n\033[1;32m%68s\n\033[0;37m", "Login successfull!");
         } else
         {
-            printf("Login failed!\n");
+            printf("\n\033[0;31m%65s\n\033[0;37m", "Login failed!");
         }
         break;
     case 3:
-        /* code */
         break;
     
     default:
@@ -99,11 +100,15 @@ void menu(){
     int option;
     do
     {
+        printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0;36m\n");
+        printMessageCenter("Main Menu");
+        printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0m\n");
         printf("\n\033[0;37m%68s\n", "1. Sign up & Log in");
         printf("%62s\n", "2. View Books");
         printf("%64s\n", "3. Search Books");
         printf("%64s\n", "4. Borrow Books");
-        printf("%56s\033[0m\n", "5. Exit");
+        printf("%61s\n", "5. Add Books");
+        printf("%56s\033[0m\n", "6. Exit");
         printf("\n\n\033[1;32m%63s", "Enter option -> ");
         scanf("%d", &option);
         printf("\033[0m");
@@ -122,6 +127,9 @@ void menu(){
             /* code */
             break;
         case 5:
+            /* code */
+            break;
+        case 6:
             printf("\n\n\n\033[1;33m%73s\n\n\n", "Thank You, Please Come Again!!");
             break;
         
@@ -129,7 +137,7 @@ void menu(){
             printf("\n\n\n\033[0;31m%73s\n", "INVALID INPUT!!! Try again...");
             break;
         }
-    } while (option != 5);
+    } while (option != 6);
     
 }
 
