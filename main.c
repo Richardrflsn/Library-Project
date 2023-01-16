@@ -56,7 +56,7 @@ void signuplogin(){
     printf("\n\033[0;37m%59s\n", "1. Sign up");
     printf("%58s\n", "2. Log in");
     printf("%56s\n", "3. Back");
-    printf("\n\n%63s","Enter option -> ");
+    printf("\n\n\033[1;32m%63s","Enter option -> ");
     scanf("%d", &option);
     switch (option)
     {
@@ -75,8 +75,7 @@ void signuplogin(){
         printMessageCenter("Enter your password : ");
         scanf("%s", account.Password);
         FILE* file = fopen("accountdata.txt", "r");
-        while (fscanf(file,
-         "%s - %s\n", account.newUsername, account.newPassword) == 2); //check file
+        while (fscanf(file,"%s - %s\n", account.newUsername, account.newPassword) == 2); //check file
         if (strcmp(account.username, account.newUsername) == 0 && strcmp(account.Password, account.newPassword) == 0)
         {
             printf("\n\033[1;32m%67s\n\033[0;37m", "Login successfull!");
@@ -103,7 +102,9 @@ void signuplogin(){
 // Main menu library
 void menu(){
     headMessage("Main Menu");
-    int option;
+    int option, key = 0;
+    char account[1000];
+    char password[1000];
     do
     {
         printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0;36m\n");
@@ -122,6 +123,12 @@ void menu(){
         {
         case 1:
             signuplogin();
+            FILE* file = fopen("accountdata.txt", "r");
+            while (fscanf(file,"%s - %s\n", account, password) == 2); //check file
+            if (strcmp("adminOracle", account) == 0 && strcmp("12345" , password) == 0)
+            {
+                key = 1;
+            }
             break;
         case 2:
             /* code */
