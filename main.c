@@ -42,6 +42,22 @@ void welcomeMessage(){
     getchar();
 }
 
+void backMenu(){
+    printf("\n\n%60s", "Back = 1");
+    int option;
+    printf("\n\n\033[1;32m%63s", "Enter option -> ");
+    scanf("%d", &option);
+    switch (option)
+    {
+    case 1:
+        break;
+    
+    default:
+        printf("\n\n\n\033[0;31m%73s\n", "INVALID INPUT!!! Try again...");
+        break;
+    }
+}
+
 // variable untuk dibaca saat dimenu
 struct user {
         char newUsername[1000];
@@ -206,6 +222,7 @@ void viewBooks(){
         printf("%45s %12s %lld\n", "ISBN ", ":", dataBooks[i].codeBooks);
         printf("%47s %10s %s\n", "Status ", ":", dataBooks[i].status);
     }
+    backMenu();
     fclose(file);
 }
 
@@ -237,7 +254,8 @@ void addBooks(){
     printf("\n%54s", "Enter Code Book : ");
     fscanf(stdin ,"%lld", &addData.codeBooks);
     fprintf(file, "\n%s _ %s _ %ld _ %lld", addData.title, addData.author, addData.publication, addData.codeBooks);
-    printf("\n\n\033[1;32m%50s\n\033[0;37m", "Book added successfully!");
+    printf("\n\n\033[1;32m%68s\n\033[0;37m", "Book added successfully!");
+    backMenu();
     fclose(file);
 }
 
@@ -261,7 +279,12 @@ void searchBooks(){
     if(!found){
         printf("\n%72s\n", "Book not found in the data base.");
     }
+    backMenu();
     fclose(fp);
+}
+
+void borrowBooks(){
+
 }
 
 // Main menu library
