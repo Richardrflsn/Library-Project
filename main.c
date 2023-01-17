@@ -284,7 +284,14 @@ void searchBooks(){
 }
 
 void borrowBooks(){
-
+    FILE* file = fopen("databaseBorrow.txt", "a+"); //judul buku - account - status
+    viewBooks();
+    FILE* bookFile = fopen("databaseBooks.txt", "r");
+    int i;
+    while (fscanf(file, "%[^_] _ %[^_] _ %ld _ %lld\n", dataBooks[i].title, dataBooks[i].author, &dataBooks[i].publication, &dataBooks[i].codeBooks) == 4)
+    {
+        i++;
+    }
 }
 
 // Main menu library
@@ -299,7 +306,12 @@ void menu(){
         printf("%64s\n", "3. Search Books");
         printf("%64s\n", "4. Borrow Books");
         printf("%61s\n", "5. Add Books");
-        printf("%56s\033[0m\n", "6. Exit");
+        if (key == 1 || key1 == 1)
+        {
+            printf("\n%59s\n\n", "6. Log out");
+        }
+        
+        printf("%56s\033[0m\n", "0. Exit");
         printf("\n\n\033[1;32m%63s", "Enter option -> ");
         scanf("%d", &option);
         printf("\033[0m");
@@ -318,7 +330,7 @@ void menu(){
             read_file(accounts);
             for (i = 0; i < 5; i++) {
                 if (strcmp(accounts[i].id, logAccount.username) == 0 && strcmp(accounts[i].password, logAccount.password) == 0) {
-                key1 = 1;
+                    key1 = 1;
                 } 
             }
             
@@ -353,6 +365,10 @@ void menu(){
             
             break;
         case 6:
+            key = 0;
+            key1 = 0;
+            break;
+        case 0:
             printf("\n\n\n\033[1;33m%71s\n\n\n", "Thank You, Please Come Again!!");
             break;
         
@@ -360,7 +376,7 @@ void menu(){
             printf("\n\n\n\033[0;31m%73s\n", "INVALID INPUT!!! Try again...");
             break;
         }
-    } while (option != 6);
+    } while (option != 0);
     
 }
 
