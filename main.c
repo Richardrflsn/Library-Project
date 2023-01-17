@@ -125,7 +125,9 @@ void viewBooks(){
     int n = i;
     for (i = 0; i < n; i++)
     {
-        printf("\n\n\033[0;37m%40d. %s %s %ld\n", i+1,dataBooks[i].title, dataBooks[i].author, dataBooks[i].publication);
+        printf("\n\n\033[0;37m%38d. Title : %s\n", i+1,dataBooks[i].title);
+        printf("%48s %s\n", "Author :", dataBooks[i].author);
+        printf("%58s %ld\n", "Publication year :", dataBooks[i].publication);
     }
     fclose(file);
 }
@@ -133,6 +135,28 @@ void viewBooks(){
 // Add books
 void addBooks(){
     FILE* file = fopen("databaseBooks.txt", "a+");
+    if (file == NULL)
+    {
+        perror("Error opening file");
+        return;
+    }
+    struct newData {
+        char title[10000];
+        char author[10000];
+        long int publication;
+    } addData;
+
+    printf("\n\n\033[0;37m%50s", "Title : ");
+    fscanf(stdin,"%[^\n]", addData.title);
+    getchar();
+    printf("\n%50s", "Enter author : ");
+    fscanf(stdin,"%[^\n]", addData.author);
+    getchar();
+    printf("\n%50s", "Publication Year : ");
+    fscanf(stdin ,"%ld", &addData.publication);
+    fprintf(file, "\n%s _ %s _ %ld", addData.title, addData.author, addData.publication);
+    printf("\n\n\033[1;32m%50s\n\033[0;37m", "Book added successfully!");
+    fclose(file);
 }
 
 // Main menu library
@@ -177,7 +201,15 @@ void menu(){
             /* code */
             break;
         case 5:
-            /* code */
+            if (key == 1)
+            {
+                addBooks();
+            } else
+            {
+                printf("\n\n\n\033[0;31m%68s\033[0;37m\n", "You don't have access");
+            }
+            
+            
             break;
         case 6:
             printf("\n\n\n\033[1;33m%73s\n\n\n", "Thank You, Please Come Again!!");
