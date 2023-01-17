@@ -102,6 +102,39 @@ void signuplogin(){
     fclose(file);
 }
 
+// View books
+struct data {
+    char title[1000];
+    char author[1000];
+    long int publication;
+} dataBooks[10];
+
+
+void viewBooks(){ 
+    int i = 0;
+    FILE* file =fopen("databaseBooks.txt","r");
+    if (file == NULL)
+    {
+        perror("Error opening file");
+        return;
+    }
+    while (fscanf(file, "%[^_] _ %[^_] _ %ld\n", dataBooks[i].title, dataBooks[i].author, &dataBooks[i].publication) == 3)
+    {
+        i++;
+    }
+    int n = i;
+    for (i = 0; i < n; i++)
+    {
+        printf("\n\n\033[0;37m%40d. %s %s %ld\n", i+1,dataBooks[i].title, dataBooks[i].author, dataBooks[i].publication);
+    }
+    fclose(file);
+}
+
+// Add books
+void addBooks(){
+    FILE* file = fopen("databaseBooks.txt", "a+");
+}
+
 // Main menu library
 void menu(){
     headMessage("Main Menu");
@@ -135,7 +168,7 @@ void menu(){
             
             break;
         case 2:
-            /* code */
+            viewBooks();
             break;
         case 3:
             /* code */
