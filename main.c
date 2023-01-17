@@ -53,10 +53,74 @@ struct user {
     } account;
 
 // Sign up and log in module
+void signup () {
+
+    char name [100];
+    char password [20];
+    printf("\n");
+    printf("\033[0;37m%58s\n\n", "Sign Up");
+
+    printf("%63s", "Enter your new username : ");
+    fscanf(stdin, "%s", name);
+
+    printf("%63s", "Enter your new password : ");
+    fscanf(stdin, "%s", password);
+
+    FILE *file = fopen("accountdata.txt", "a");
+
+    fprintf(file, "Username : %s\n", name);
+    fprintf(file, "Password : %s\n", password);
+    fprintf(file, "----------\n");
+    fprintf(file, "\n");
+
+    fclose(file);
+}
+
+struct account {
+    char id[20]; 
+    char password[20];
+};
+
+static struct account accounts[10];
+
+void read_file(struct account accounts[])
+{
+    FILE *fp;
+    int i = 0;   // count how many lines are in the file
+    int c;
+
+    fp = fopen("accountdata.txt", "r");
+
+    while(!feof(fp)) {
+
+        c = fgetc(fp);
+        if(c == '\n')
+            ++i;
+    }
+
+    int j = 0;
+
+    rewind(fp);  // Line I added
+        // read each line and put into accounts
+
+    while(j!=i-1) {
+        fscanf(fp, "Username : %s\nPassword : %s\n----------\n", accounts[j].id, accounts[j].password);
+        ++j;
+    }
+    fclose(fp);
+}
+
+struct logAccount{
+    char username[100];
+    char password[100];
+} logAccount;
+
 void signuplogin(){
-    int option, key;
+
+    int option;
+    int k;
+    int check = 0;
     
-    FILE* file = fopen("accountdata.txt", "a+");
     printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0;36m\n");
     printMessageCenter("Sign up & Log in");
     printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0m\n");
@@ -67,37 +131,45 @@ void signuplogin(){
     scanf("%d", &option);
     switch (option)
     {
+
     case 1:
-        printf("\n");
-        printf("\033[0;37m%58s\n\n", "Sign Up");
-        printf("%63s", "Enter your new username : ");
-        fscanf(stdin, "%s", account.newUsername);
-        printf("%63s", "Enter your new password : ");
-        fscanf(stdin, "%s", account.newPassword);
-        fprintf(file, "%s - %s\n", account.newUsername, account.newPassword);
+        signup();
         break;
+
     case 2:
         printf("\n");
         printf("\033[0;37m%58s\n\n", "Log In");
         printf("%63s", "Enter your username : ");
-        scanf("%s", account.username);
+        scanf("%s", logAccount.username);
         printf("%63s", "Enter your password : ");
-        scanf("%s", account.password);
-        FILE* file = fopen("accountdata.txt", "r");
-        while (fscanf(file,"%s - %s\n", account.newUsername, account.newPassword) == 2); //check file
-        if (strcmp(account.username, account.newUsername) == 0 && strcmp(account.password, account.newPassword) == 0)
-        {
-            printf("\n\033[1;32m%67s\n\033[0;37m", "Login successfull!");
-        } else
-        {
+        scanf("%s", logAccount.password);
+
+        read_file(accounts);
+
+        
+
+        for (k = 0; k < 5; k++) {
+
+            if (strcmp(accounts[k].id, logAccount.username) == 0 && strcmp(accounts[k].password, logAccount.password) == 0) {
+
+                printf("\n\033[1;32m%67s\n\033[0;37m", "Login successfull!");
+                check = 1;
+                break;
+            } 
+        }
+
+        if (check == 0) {
+
             printf("\n\033[0;31m%65s\n\033[0;37m", "Login failed!");
         }
-        if (strcmp("adminOracle", account.username) == 0 && strcmp("12345" ,account.password) == 0)
+
+        if (strcmp("adminOracle", logAccount.username) == 0 && strcmp("12345" ,logAccount.password) == 0 && check == 1)
         {
             printMessageCenter("You are now login as admin");
             printf("\n");
         }
         break;
+
     case 3:
         break;
     
@@ -105,7 +177,6 @@ void signuplogin(){
         printf("INVALID INPUT!!! Try again...");
         break;
     }
-    fclose(file);
 }
 
 // View books
@@ -157,7 +228,7 @@ void addBooks(){
     printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0;36m\n");
     printMessageCenter("Add Books");
     printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0m\n");
-    printf("\n\n%50s", "Enter title : ");
+    printf("\n\n\033[0;37m%50s", "Enter title : ");
     getchar();
     fscanf(stdin,"%[^\n]", addData.title);
     getchar();
@@ -199,13 +270,14 @@ void menu(){
         case 1:
             signuplogin();
             FILE* file = fopen("accountdata.txt", "r");
-            if (strcmp("adminOracle", account.username) == 0 && strcmp("12345" , account.password) == 0)
+            if (strcmp("adminOracle", logAccount.username) == 0 && strcmp("12345" , logAccount.password) == 0)
             {
                 key = 1;
             } else
             {
                 key = 0;
             }
+            fclose(file);
             
             break;
         case 2:

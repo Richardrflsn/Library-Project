@@ -1,5 +1,12 @@
-Account - Password
-richard - 123
-brian - 321
-can - 1234
-adminOracle - 12345
+Username : adminOracle
+Password : 12345
+----------
+
+Username : richard
+Password : 123
+----------
+
+Username : brian
+Password : 321
+----------
+
