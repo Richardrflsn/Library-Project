@@ -15,23 +15,21 @@ void printMessageCenter(const char *message){
     printf("%s", message);
 }
 
-void headMessage(const char *message){
+void headMessage(){
     printf("\t\t\t\t\033[0;35m__________________________________________________");
     printf("\n\n\033[1;37m%65s", "| Library in C |");
     printf("\n\t\t\t\t\033[0;35m__________________________________________________\033[0m");
+}
+
+void headMessage2(const char *message){
     printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0;36m\n");
     printMessageCenter(message);
     printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0m\n");
 }
 
-void headMessage2(){
-    printf("\t\t\t\t\033[0;35m__________________________________________________");
-    printf("\n\n\033[1;37m%65s", "| Library in C |");
-    printf("\n\t\t\t\t\033[0;35m__________________________________________________\033[0m");
-}
-
 void welcomeMessage(){
-    headMessage("Library Management Project");
+    headMessage();
+    headMessage2("Library Management Project");
     printf("\n\t\t\t\t\033[0;31m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\033[0;33m");
     printf("\n\t\t\t          .............................................");
     printf("\n\t\t\t          |                  WELCOME                  |");
@@ -120,10 +118,7 @@ void signuplogin(){
     int option;
     int k;
     int check = 0;
-    
-    printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0;36m\n");
-    printMessageCenter("Sign up & Log in");
-    printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0m\n");
+    headMessage2("Sign up & Log in");
     printf("\n\033[0;37m%59s\n", "1. Sign up");
     printf("%58s\n", "2. Log in");
     printf("%56s\n", "3. Back");
@@ -184,6 +179,7 @@ struct data {
     char title[1000];
     char author[1000];
     long int publication;
+    long long int codeBooks;
 } dataBooks[10];
 
 
@@ -195,19 +191,18 @@ void viewBooks(){
         perror("Error opening file");
         return;
     }
-    while (fscanf(file, "%[^_] _ %[^_] _ %ld\n", dataBooks[i].title, dataBooks[i].author, &dataBooks[i].publication) == 3)
+    while (fscanf(file, "%[^_] _ %[^_] _ %ld _ %lld\n", dataBooks[i].title, dataBooks[i].author, &dataBooks[i].publication, &dataBooks[i].codeBooks) == 4)
     {
         i++;
     }
     int n = i;
-    printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0;36m\n");
-    printMessageCenter("List of Books");
-    printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0m\n");
+    headMessage2("List of Books");
     for (i = 0; i < n; i++)
     {
         printf("\n\n\033[0;37m%38d. Title : %s\n", i+1,dataBooks[i].title);
-        printf("%48s %s\n", "Author :", dataBooks[i].author);
+        printf("%47s %10s %s\n", "Author ", ":", dataBooks[i].author);
         printf("%58s %ld\n", "Publication year :", dataBooks[i].publication);
+        printf("%45s %12s %lld\n", "ISBN ", ":", dataBooks[i].codeBooks);
     }
     fclose(file);
 }
@@ -225,9 +220,7 @@ void addBooks(){
         char author[10000];
         long int publication;
     } addData;
-    printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0;36m\n");
-    printMessageCenter("Add Books");
-    printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0m\n");
+    headMessage2("Add Books");
     printf("\n\n\033[0;37m%50s", "Enter title : ");
     getchar();
     fscanf(stdin,"%[^\n]", addData.title);
@@ -244,18 +237,34 @@ void addBooks(){
 
 // Search books module
 void searchBooks(){
+    FILE *fp = fopen("databaseBooks.txt", "r");
+    int found = 0; //flag to check if book found
+    char bookName[1000];
+    char searchInBooks[1000];
+    headMessage2("Search Books");
+    printf("\033[0;37m\n%69s", "Enter the book title to search for : ");
+    scanf("%s", searchInBooks);
 
+    while(fgets(bookName, sizeof(bookName), fp)){
+        if(strstr(bookName, searchInBooks)){
+        printf("\n%45s %s", "Book found : ", bookName);
+        found = 1;
+        break;
+        }
+    }
+    if(!found){
+        printf("\n%72s\n", "Book not found in the data base.");
+    }
+    fclose(fp);
 }
 
 // Main menu library
 void menu(){
-    headMessage2();
+    headMessage();
     int option, key = 0;
     do
     {
-        printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0;36m\n");
-        printMessageCenter("Main Menu");
-        printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0m\n");
+        headMessage2("Main Menu");
         printf("\n\033[0;37m%68s\n", "1. Sign up & Log in");
         printf("%62s\n", "2. View Books");
         printf("%64s\n", "3. Search Books");
@@ -284,7 +293,7 @@ void menu(){
             viewBooks();
             break;
         case 3:
-            /* code */
+            searchBooks();
             break;
         case 4:
             /* code */
@@ -301,7 +310,7 @@ void menu(){
             
             break;
         case 6:
-            printf("\n\n\n\033[1;33m%73s\n\n\n", "Thank You, Please Come Again!!");
+            printf("\n\n\n\033[1;33m%71s\n\n\n", "Thank You, Please Come Again!!");
             break;
         
         default:
