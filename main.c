@@ -352,6 +352,58 @@ void borrowBooks(){
 
 }
 
+// return books module
+void returnBooks() {
+    FILE* file = fopen("databaseBooks.txt", "r");
+    int i = 0;
+    char returnTitle[1000];
+
+    headMessage2("Return Books");
+    printf("\033[0;37m\n%55s", "Enter the book title : "); getchar(); 
+    scanf("%[^\n]", returnTitle); getchar(); 
+
+    if (file == NULL)
+    {
+        perror("Error opening file");
+        return;
+    }
+
+    while (!feof(file))
+    {
+        fscanf(file, "%[^_]_%[^_]_%ld_%lld_%s\n", dataBooks[i].title, dataBooks[i].author, &dataBooks[i].publication, &dataBooks[i].codeBooks, dataBooks[i].status);
+        i++;
+    }
+
+    int n = i;
+    for (i = 0; i < n; i++) {
+        
+            if (strcmp(returnTitle, dataBooks[i].title) == 0) {
+                
+                printf("\n\n\033[0;37m%68s", "Thank You for Returned the Book!");
+                strcpy(dataBooks[i].status, "Available");
+                break;
+            }
+
+            else if (i == n - 1) {
+
+                printf("\n\n\033[0;37m%68s\n", "The book is not similar");
+                break;
+            }
+    }
+
+    fclose(file);
+
+    FILE* rev = fopen("databaseBooks.txt", "w");
+
+    for (i = 0; i < n; i++) {
+
+        fprintf(rev, "%s_%s_%ld_%lld_%s\n", dataBooks[i].title, dataBooks[i].author, dataBooks[i].publication, dataBooks[i].codeBooks, dataBooks[i].status);
+    }
+
+    fclose(rev);
+
+}
+
 // Main menu library
 void menu(){
     headMessage();
@@ -424,14 +476,22 @@ void menu(){
             
             break;
         case 6:
-        
+            if (key1 == 1)
+            {
+                returnBooks();
+            } else
+            {
+                printf("\n\n\n\033[0;31m%69s\033[0;37m\n\n", "You don't have access");
+                printf("\n\033[0;31m%68s\033[0;37m\n\n", "Please login first!");
+            }
+
             break;
         case 7:
             key = 0;
             key1 = 0;
             break;
         case 0:
-            printf("\n\n\n\033[1;33m%71s\n\n\n", "Thank You, Please Come Again!!");
+            printf("\n\n\n\033[1;33m%73s\n\n\n", "Thank You, Please Come Again!!");
             break;
         
         default:
