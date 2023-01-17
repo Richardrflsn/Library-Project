@@ -190,7 +190,7 @@ void signuplogin(){
     }
 }
 
-// View books
+// View books Module
 struct data {
     char title[1000];
     char author[1000];
@@ -208,8 +208,9 @@ void viewBooks(){
         perror("Error opening file");
         return;
     }
-    while (fscanf(file, "%[^_] _ %[^_] _ %ld _ %lld\n", dataBooks[i].title, dataBooks[i].author, &dataBooks[i].publication, &dataBooks[i].codeBooks) == 4)
+    while (!feof(file))
     {
+        fscanf(file, "%[^_]_%[^_]_%ld_%lld_%s\n", dataBooks[i].title, dataBooks[i].author, &dataBooks[i].publication, &dataBooks[i].codeBooks, dataBooks[i].status);
         i++;
     }
     int n = i;
@@ -226,7 +227,7 @@ void viewBooks(){
     fclose(file);
 }
 
-// Add books
+// Add books Module
 struct newData {
         char title[10000];
         char author[10000];
@@ -253,7 +254,7 @@ void addBooks(){
     fscanf(stdin ,"%ld", &addData.publication);
     printf("\n%54s", "Enter Code Book : ");
     fscanf(stdin ,"%lld", &addData.codeBooks);
-    fprintf(file, "\n%s _ %s _ %ld _ %lld", addData.title, addData.author, addData.publication, addData.codeBooks);
+    fprintf(file, "%s_%s_%ld_%lld_Available\n", addData.title, addData.author, addData.publication, addData.codeBooks);
     printf("\n\n\033[1;32m%68s\n\033[0;37m", "Book added successfully!");
     backMenu();
     fclose(file);
@@ -262,11 +263,17 @@ void addBooks(){
 // Search books module
 void searchBooks(){
     FILE *fp = fopen("databaseBooks.txt", "r");
+    if (fp == NULL)
+    {
+        perror("Error opening file");
+        return;
+    }
+    
     int found = 0; //flag to check if book found
     char bookName[1000];
     char searchInBooks[1000];
     headMessage2("Search Books");
-    printf("\033[0;37m\n%69s", "Enter the book title to search for : ");
+    printf("\033[0;37m\n%69s", "What are you looking for : ");
     scanf("%s", searchInBooks);
 
     while(fgets(bookName, sizeof(bookName), fp)){
@@ -283,15 +290,66 @@ void searchBooks(){
     fclose(fp);
 }
 
+// borrow books module
 void borrowBooks(){
-    FILE* file = fopen("databaseBorrow.txt", "a+"); //judul buku - account - status
-    viewBooks();
-    FILE* bookFile = fopen("databaseBooks.txt", "r");
-    int i;
-    while (fscanf(file, "%[^_] _ %[^_] _ %ld _ %lld\n", dataBooks[i].title, dataBooks[i].author, &dataBooks[i].publication, &dataBooks[i].codeBooks) == 4)
+    FILE* file = fopen("databaseBooks.txt", "r");
+    int i = 0;
+    char borrowTitle[1000];
+
+    headMessage2("Borrow Books");
+    printf("\033[0;37m\n%55s", "Enter the book title : "); getchar(); 
+    scanf("%[^\n]", borrowTitle); getchar(); 
+    
+    if (file == NULL)
     {
+        perror("Error opening file");
+        return;
+    }
+
+    while (!feof(file))
+    {
+        fscanf(file, "%[^_]_%[^_]_%ld_%lld_%s\n", dataBooks[i].title, dataBooks[i].author, &dataBooks[i].publication, &dataBooks[i].codeBooks, dataBooks[i].status);
         i++;
     }
+
+    int n = i;
+    int j = 0;
+    for (i = 0; i < n; i++) {
+
+        
+            if (strcmp(borrowTitle, dataBooks[i].title) == 0) {
+                
+                if (strcmp("Available", dataBooks[i].status) == 0) {
+
+                    printf("\n\n\033[0;37m%68s", "Book succesfully Borrowed");
+                    strcpy(dataBooks[i].status, "Unavailable");
+                    
+                } else {
+
+                    printf("\n\n\033[0;37m%75s", "Book Already Borrowed by Someone Else");
+                    j = 0;
+                }
+            } else
+            {
+                j = 1;
+            }
+    }
+    if (j == 1)
+    {
+        printf("\n\n\033[0;37m%65s\n", "Book not found!");
+    }
+    
+    fclose(file);
+
+    FILE* rev = fopen("databaseBooks.txt", "w");
+
+    for (i = 0; i < n; i++) {
+
+        fprintf(rev, "%s_%s_%ld_%lld_%s\n", dataBooks[i].title, dataBooks[i].author, dataBooks[i].publication, dataBooks[i].codeBooks, dataBooks[i].status);
+    }
+
+    fclose(rev);
+
 }
 
 // Main menu library
@@ -306,9 +364,10 @@ void menu(){
         printf("%64s\n", "3. Search Books");
         printf("%64s\n", "4. Borrow Books");
         printf("%61s\n", "5. Add Books");
+        printf("%64s\n", "6. Return Books");
         if (key == 1 || key1 == 1)
         {
-            printf("\n%59s\n\n", "6. Log out");
+            printf("\n%59s\n\n", "7. Log out");
         }
         
         printf("%56s\033[0m\n", "0. Exit");
@@ -365,6 +424,9 @@ void menu(){
             
             break;
         case 6:
+        
+            break;
+        case 7:
             key = 0;
             key1 = 0;
             break;
