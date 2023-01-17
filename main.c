@@ -180,6 +180,7 @@ struct data {
     char author[1000];
     long int publication;
     long long int codeBooks;
+    char status[15];
 } dataBooks[10];
 
 
@@ -203,11 +204,19 @@ void viewBooks(){
         printf("%47s %10s %s\n", "Author ", ":", dataBooks[i].author);
         printf("%58s %ld\n", "Publication year :", dataBooks[i].publication);
         printf("%45s %12s %lld\n", "ISBN ", ":", dataBooks[i].codeBooks);
+        printf("%47s %10s %s\n", "Status ", ":", dataBooks[i].status);
     }
     fclose(file);
 }
 
 // Add books
+struct newData {
+        char title[10000];
+        char author[10000];
+        long int publication;
+        long long int codeBooks;
+} addData;
+
 void addBooks(){
     FILE* file = fopen("databaseBooks.txt", "a+");
     if (file == NULL)
@@ -215,11 +224,6 @@ void addBooks(){
         perror("Error opening file");
         return;
     }
-    struct newData {
-        char title[10000];
-        char author[10000];
-        long int publication;
-    } addData;
     headMessage2("Add Books");
     printf("\n\n\033[0;37m%50s", "Enter title : ");
     getchar();
@@ -230,7 +234,9 @@ void addBooks(){
     getchar();
     printf("\n%61s", "Enter publication year : ");
     fscanf(stdin ,"%ld", &addData.publication);
-    fprintf(file, "\n%s _ %s _ %ld", addData.title, addData.author, addData.publication);
+    printf("\n%54s", "Enter Code Book : ");
+    fscanf(stdin ,"%lld", &addData.codeBooks);
+    fprintf(file, "\n%s _ %s _ %ld _ %lld", addData.title, addData.author, addData.publication, addData.codeBooks);
     printf("\n\n\033[1;32m%50s\n\033[0;37m", "Book added successfully!");
     fclose(file);
 }
