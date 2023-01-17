@@ -290,7 +290,7 @@ void borrowBooks(){
 // Main menu library
 void menu(){
     headMessage();
-    int option, key = 0;
+    int option, key = 0, key1 = 0, i;
     do
     {
         headMessage2("Main Menu");
@@ -315,6 +315,13 @@ void menu(){
             {
                 key = 0;
             }
+            read_file(accounts);
+            for (i = 0; i < 5; i++) {
+                if (strcmp(accounts[i].id, logAccount.username) == 0 && strcmp(accounts[i].password, logAccount.password) == 0) {
+                key1 = 1;
+                } 
+            }
+            
             fclose(file);
             
             break;
@@ -325,7 +332,15 @@ void menu(){
             searchBooks();
             break;
         case 4:
-            /* code */
+            if (key1 == 1)
+            {
+                borrowBooks();
+            } else
+            {
+                printf("\n\n\n\033[0;31m%69s\033[0;37m\n\n", "You don't have access");
+                printf("\n\033[0;31m%68s\033[0;37m\n\n", "Please login first!");
+            }
+            
             break;
         case 5:
             if (key == 1)
@@ -335,7 +350,6 @@ void menu(){
             {
                 printf("\n\n\n\033[0;31m%68s\033[0;37m\n\n", "You don't have access");
             }
-            
             
             break;
         case 6:
