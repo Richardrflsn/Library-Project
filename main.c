@@ -24,6 +24,12 @@ void headMessage(const char *message){
     printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0m\n");
 }
 
+void headMessage2(){
+    printf("\t\t\t\t\033[0;35m__________________________________________________");
+    printf("\n\n\033[1;37m%65s", "| Library in C |");
+    printf("\n\t\t\t\t\033[0;35m__________________________________________________\033[0m");
+}
+
 void welcomeMessage(){
     headMessage("Library Management Project");
     printf("\n\t\t\t\t\033[0;31m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\033[0;33m");
@@ -64,18 +70,18 @@ void signuplogin(){
     case 1:
         printf("\n");
         printf("\033[0;37m%58s\n\n", "Sign Up");
-        printMessageCenter("Enter your new username : ");
+        printf("%63s", "Enter your new username : ");
         fscanf(stdin, "%s", account.newUsername);
-        printMessageCenter("Enter your new password : ");
+        printf("%63s", "Enter your new password : ");
         fscanf(stdin, "%s", account.newPassword);
         fprintf(file, "%s - %s\n", account.newUsername, account.newPassword);
         break;
     case 2:
         printf("\n");
         printf("\033[0;37m%58s\n\n", "Log In");
-        printMessageCenter("Enter your username : ");
+        printf("%63s", "Enter your username : ");
         scanf("%s", account.username);
-        printMessageCenter("Enter your password : ");
+        printf("%63s", "Enter your password : ");
         scanf("%s", account.password);
         FILE* file = fopen("accountdata.txt", "r");
         while (fscanf(file,"%s - %s\n", account.newUsername, account.newPassword) == 2); //check file
@@ -123,6 +129,9 @@ void viewBooks(){
         i++;
     }
     int n = i;
+    printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0;36m\n");
+    printMessageCenter("List of Books");
+    printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0m\n");
     for (i = 0; i < n; i++)
     {
         printf("\n\n\033[0;37m%38d. Title : %s\n", i+1,dataBooks[i].title);
@@ -145,23 +154,31 @@ void addBooks(){
         char author[10000];
         long int publication;
     } addData;
-
-    printf("\n\n\033[0;37m%50s", "Title : ");
+    printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0;36m\n");
+    printMessageCenter("Add Books");
+    printf("\n\t\t\t\t\033[0;34m--------------------------------------------------\033[0m\n");
+    printf("\n\n%50s", "Enter title : ");
+    getchar();
     fscanf(stdin,"%[^\n]", addData.title);
     getchar();
-    printf("\n%50s", "Enter author : ");
+    printf("\n%51s", "Enter author : ");
     fscanf(stdin,"%[^\n]", addData.author);
     getchar();
-    printf("\n%50s", "Publication Year : ");
+    printf("\n%61s", "Enter publication year : ");
     fscanf(stdin ,"%ld", &addData.publication);
     fprintf(file, "\n%s _ %s _ %ld", addData.title, addData.author, addData.publication);
     printf("\n\n\033[1;32m%50s\n\033[0;37m", "Book added successfully!");
     fclose(file);
 }
 
+// Search books module
+void searchBooks(){
+
+}
+
 // Main menu library
 void menu(){
-    headMessage("Main Menu");
+    headMessage2();
     int option, key = 0;
     do
     {
@@ -206,7 +223,7 @@ void menu(){
                 addBooks();
             } else
             {
-                printf("\n\n\n\033[0;31m%68s\033[0;37m\n", "You don't have access");
+                printf("\n\n\n\033[0;31m%68s\033[0;37m\n\n", "You don't have access");
             }
             
             
