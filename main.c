@@ -393,7 +393,8 @@ void returnBooks() {
 
             else if (i == n - 1) {
 
-                printf("\n\n\033[0;37m%68s\n", "The book is not similar");
+                // printf("\n\n\033[0;37m%68s\n", "The book is not similar");
+                printf("\n\n\033[0;37m%76s\n", "Our library doesn't have that book");
                 break;
             }
     }
