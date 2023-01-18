@@ -221,7 +221,16 @@ void viewBooks(){
         printf("%47s %10s %s\n", "Author ", ":", dataBooks[i].author);
         printf("%58s %ld\n", "Publication year :", dataBooks[i].publication);
         printf("%45s %12s %lld\n", "ISBN ", ":", dataBooks[i].codeBooks);
-        printf("%47s %10s %s\n", "Status ", ":", dataBooks[i].status);
+        // printf("%47s %10s %s\n", "Status ", ":", dataBooks[i].status);
+        if (strcmp("Available", dataBooks[i].status))
+        {
+            printf("%47s %10s \033[0;31m%s\n\033[0;37m", "Status ", ":", dataBooks[i].status);
+        } else if (strcmp("Unavailable", dataBooks[i].status))
+        {
+            printf("%47s %10s \033[1;32m%s\n\033[0;37m", "Status ", ":", dataBooks[i].status);
+        }
+        
+        
     }
     backMenu();
     fclose(file);
@@ -317,26 +326,24 @@ void borrowBooks(){
     for (i = 0; i < n; i++) {
 
         
-            if (strcmp(borrowTitle, dataBooks[i].title) == 0) {
+        if (strcmp(borrowTitle, dataBooks[i].title) == 0) {
+            
+            if (strcmp("Available", dataBooks[i].status) == 0) {
+
+                printf("\n\n\033[0;37m%68s\n", "Book succesfully Borrowed");
+                strcpy(dataBooks[i].status, "Unavailable");
+                break;
                 
-                if (strcmp("Available", dataBooks[i].status) == 0) {
-
-                    printf("\n\n\033[0;37m%68s", "Book succesfully Borrowed");
-                    strcpy(dataBooks[i].status, "Unavailable");
-                    
-                } else {
-
-                    printf("\n\n\033[0;37m%75s", "Book Already Borrowed by Someone Else");
-                    j = 0;
-                }
-            } else
-            {
-                j = 1;
+            } else {
+                printf("\n\n\033[0;37m%75s\n", "Book Already Borrowed by Someone Else");
+                break;
             }
-    }
-    if (j == 1)
-    {
-        printf("\n\n\033[0;37m%65s\n", "Book not found!");
+        }
+        if (i == n-1)
+        {
+            printf("\n\n\033[0;37m%65s\n", "Book not found!");
+            break;
+        }
     }
     
     fclose(file);
@@ -379,7 +386,7 @@ void returnBooks() {
         
             if (strcmp(returnTitle, dataBooks[i].title) == 0) {
                 
-                printf("\n\n\033[0;37m%68s", "Thank You for Returned the Book!");
+                printf("\n\n\033[0;37m%68s\n", "Thank You for Returned the Book!");
                 strcpy(dataBooks[i].status, "Available");
                 break;
             }
