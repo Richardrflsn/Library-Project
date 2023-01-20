@@ -18,3 +18,5 @@ To borrow books, you must log in first and also when returning the book. Normal 
 3. Open the folder in the IDE; one of the IDEs that can be used is Visual Studio Code.
 4. run the program, then you can try the Oracle project library, and there you can also create your own account!
 
+# Preview Program
+<img src="https://user-images.githubusercontent.com/105922097/213734159-b6ceec04-873a-4817-a50f-a34cc885be3b.mp4" width="50" height="50">
