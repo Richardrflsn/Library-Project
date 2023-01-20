@@ -334,19 +334,25 @@ void searchBooks(){
 struct borrow
 {
     char status[1000];
-    char borrowTittle[1000];
+    char borrowTitle[1000];
 } borrows;
 
 void borrowBooks(){
     FILE* file = fopen("databaseBooks.txt", "r");
     FILE* borrowData = fopen("databaseBorrow.txt", "a+");
+    char titleBorrow[1000];
     int i = 0;
 
     headMessage2("Borrow Books");
     printf("\033[0;37m\n%55s", "Enter the book title : "); getchar(); 
-    fscanf(borrowData ,"%[^\n]", borrows.borrowTittle); getchar(); 
-    
+    scanf("%[^\n]", titleBorrow); getchar(); 
+    strcpy(borrows.borrowTitle, titleBorrow);
     if (file == NULL)
+    {
+        perror("Error opening file");
+        return;
+    }
+    if (borrowData == NULL)
     {
         perror("Error opening file");
         return;
@@ -362,14 +368,14 @@ void borrowBooks(){
     for (i = 0; i < n; i++) {
 
         
-        if (strcmp(borrows.borrowTittle, dataBooks[i].title) == 0) {
+        if (strcmp(titleBorrow, dataBooks[i].title) == 0) {
             
             if (strcmp("Available", dataBooks[i].status) == 0) {
                 
                 printf("\n\n\033[0;37m%68s\n", "Book succesfully Borrowed");
                 strcpy(borrows.status, "Borrowed");
                 strcpy(dataBooks[i].status, "Unavailable");
-                fprintf(borrowData, "%s_%s_%s\n", logAccount.username, borrows.borrowTittle, borrows.status);
+                fprintf(borrowData, "%s_%s_%s\n", logAccount.username, borrows.borrowTitle, borrows.status);
                 break;
                 
             } else {
@@ -388,14 +394,12 @@ void borrowBooks(){
     fclose(borrowData);
 
     FILE* rev = fopen("databaseBooks.txt", "w");
-    FILE* borrowFile = fopen("databaseBorrow.txt", "w");
 
     for (i = 0; i < n; i++) {
         fprintf(rev, "%s_%s_%ld_%lld_%s\n", dataBooks[i].title, dataBooks[i].author, dataBooks[i].publication, dataBooks[i].codeBooks, dataBooks[i].status);
     }
 
     fclose(rev);
-    fclose(borrowData);
 
 }
 
