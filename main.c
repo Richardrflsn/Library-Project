@@ -197,8 +197,38 @@ struct data {
     long int publication;
     long long int codeBooks;
     char status[15];
-} dataBooks[10];
+} dataBooks[100];
 
+int partition(struct data *sortdata, int low, int high){
+    char pivot[41];
+    strcpy(pivot, sortdata[high].title);
+    int i = (low - 1);
+    int j;
+    for ( j = low; j <= high - 1; j++)
+    {
+        if (strcmp(sortdata[j].title, pivot) < 0)
+        {
+            i++;
+            struct data temp = sortdata[i];
+            sortdata[i] = sortdata[j];
+            sortdata[j] = temp;
+        }
+    }
+    struct data temp = sortdata[i + 1];
+    sortdata[i + 1] = sortdata[high];
+    sortdata[high] = temp;
+    return (i + 1);
+}
+
+void quickSort(struct data *sortdata, int low, int high){
+    if (low < high)
+    {
+        int pivot_index = partition(sortdata, low, high);
+
+        quickSort(sortdata, low, pivot_index - 1);
+        quickSort(sortdata, pivot_index + 1, high);
+    }
+}
 
 void viewBooks(){ 
     int i = 0;
@@ -215,6 +245,7 @@ void viewBooks(){
     }
     int n = i;
     headMessage2("List of Books");
+    quickSort(dataBooks, 0, n-1);
     for (i = 0; i < n; i++)
     {
         printf("\n\n\033[0;37m%38d. Title : %s\n", i+1,dataBooks[i].title);
@@ -300,14 +331,20 @@ void searchBooks(){
 }
 
 // borrow books module
+struct borrow
+{
+    char status[1000];
+    char borrowTittle[1000];
+} borrows;
+
 void borrowBooks(){
     FILE* file = fopen("databaseBooks.txt", "r");
+    FILE* borrowData = fopen("databaseBorrow.txt", "a+");
     int i = 0;
-    char borrowTitle[1000];
 
     headMessage2("Borrow Books");
     printf("\033[0;37m\n%55s", "Enter the book title : "); getchar(); 
-    scanf("%[^\n]", borrowTitle); getchar(); 
+    fscanf(borrowData ,"%[^\n]", borrows.borrowTittle); getchar(); 
     
     if (file == NULL)
     {
@@ -320,18 +357,19 @@ void borrowBooks(){
         fscanf(file, "%[^_]_%[^_]_%ld_%lld_%s\n", dataBooks[i].title, dataBooks[i].author, &dataBooks[i].publication, &dataBooks[i].codeBooks, dataBooks[i].status);
         i++;
     }
-
     int n = i;
     int j = 0;
     for (i = 0; i < n; i++) {
 
         
-        if (strcmp(borrowTitle, dataBooks[i].title) == 0) {
+        if (strcmp(borrows.borrowTittle, dataBooks[i].title) == 0) {
             
             if (strcmp("Available", dataBooks[i].status) == 0) {
-
+                
                 printf("\n\n\033[0;37m%68s\n", "Book succesfully Borrowed");
+                strcpy(borrows.status, "Borrowed");
                 strcpy(dataBooks[i].status, "Unavailable");
+                fprintf(borrowData, "%s_%s_%s\n", logAccount.username, borrows.borrowTittle, borrows.status);
                 break;
                 
             } else {
@@ -347,22 +385,31 @@ void borrowBooks(){
     }
     
     fclose(file);
+    fclose(borrowData);
 
     FILE* rev = fopen("databaseBooks.txt", "w");
+    FILE* borrowFile = fopen("databaseBorrow.txt", "w");
 
     for (i = 0; i < n; i++) {
-
         fprintf(rev, "%s_%s_%ld_%lld_%s\n", dataBooks[i].title, dataBooks[i].author, dataBooks[i].publication, dataBooks[i].codeBooks, dataBooks[i].status);
     }
 
     fclose(rev);
+    fclose(borrowData);
 
 }
 
 // return books module
+struct databorrow
+{
+    char status[1000];
+    char borrowTittle[1000];
+} dataBorrows[100];
+
 void returnBooks() {
     FILE* file = fopen("databaseBooks.txt", "r");
-    int i = 0;
+    FILE* borrowData = fopen("databaseBorrow.txt", "r");
+    int i = 0, j = 0;
     char returnTitle[1000];
 
     headMessage2("Return Books");
@@ -374,14 +421,21 @@ void returnBooks() {
         perror("Error opening file");
         return;
     }
-
+    
     while (!feof(file))
     {
         fscanf(file, "%[^_]_%[^_]_%ld_%lld_%s\n", dataBooks[i].title, dataBooks[i].author, &dataBooks[i].publication, &dataBooks[i].codeBooks, dataBooks[i].status);
         i++;
     }
 
+    while (!feof(borrowData))
+    {
+        fscanf(borrowData, "%[^_]_%[^_]_%s\n", logAccount.username, dataBorrows[j].borrowTittle, dataBorrows[j].status);
+        j++;
+    }
+
     int n = i;
+    int m = j;
     for (i = 0; i < n; i++) {
         
             if (strcmp(returnTitle, dataBooks[i].title) == 0) {
@@ -398,18 +452,32 @@ void returnBooks() {
                 break;
             }
     }
+    for ( j = 0; j < m; j++)
+    {
+        if (strcmp(returnTitle, dataBorrows[j].borrowTittle) == 0)
+        {
+            strcpy(dataBorrows[j].status, "Returned");
+        }
+    }
+    
 
     fclose(file);
+    fclose(borrowData);
 
     FILE* rev = fopen("databaseBooks.txt", "w");
+    FILE* borrowFile = fopen("databaseBorrow.txt", "w");
 
     for (i = 0; i < n; i++) {
-
         fprintf(rev, "%s_%s_%ld_%lld_%s\n", dataBooks[i].title, dataBooks[i].author, dataBooks[i].publication, dataBooks[i].codeBooks, dataBooks[i].status);
     }
+    for (j = 0; j < m; j++)
+    {
+        fprintf(borrowFile, "%s_%s_%s\n", logAccount.username, dataBorrows[j].borrowTittle, dataBorrows[j].status);
+    }
+    
 
     fclose(rev);
-
+    fclose(borrowFile);
 }
 
 // Main menu library
@@ -423,8 +491,8 @@ void menu(){
         printf("%62s\n", "2. View Books");
         printf("%64s\n", "3. Search Books");
         printf("%64s\n", "4. Borrow Books");
-        printf("%61s\n", "5. Add Books");
-        printf("%64s\n", "6. Return Books");
+        printf("%64s\n", "5. Return Books");
+        printf("%61s\n", "6. Add Books");
         if (key == 1 || key1 == 1)
         {
             printf("\n%59s\n\n", "7. Log out");
@@ -466,7 +534,7 @@ void menu(){
             if (key1 == 1)
             {
                 borrowBooks();
-            } else
+            } else if (key1 == 0)
             {
                 printf("\n\n\n\033[0;31m%69s\033[0;37m\n\n", "You don't have access");
                 printf("\n\033[0;31m%68s\033[0;37m\n\n", "Please login first!");
@@ -474,25 +542,23 @@ void menu(){
             
             break;
         case 5:
-            if (key == 1)
-            {
-                addBooks();
-            } else
-            {
-                printf("\n\n\n\033[0;31m%68s\033[0;37m\n\n", "You don't have access");
-            }
-            
-            break;
-        case 6:
             if (key1 == 1)
             {
                 returnBooks();
-            } else
+            } else if (key1 == 0)
             {
                 printf("\n\n\n\033[0;31m%69s\033[0;37m\n\n", "You don't have access");
                 printf("\n\033[0;31m%68s\033[0;37m\n\n", "Please login first!");
             }
-
+            break;
+        case 6:
+            if (key == 1)
+            {
+                addBooks();
+            } else if (key == 0)
+            {
+                printf("\n\n\n\033[0;31m%68s\033[0;37m\n\n", "You don't have access");
+            }
             break;
         case 7:
             key = 0;
