@@ -484,6 +484,44 @@ void returnBooks() {
     fclose(borrowFile);
 }
 
+// View borrow module
+struct accBorrow
+{
+    char nameAcc[1000];
+} acc[100];
+
+void viewBorrow(){
+    FILE* borrowFile = fopen("databaseBorrow.txt", "r");
+    if (borrowFile == NULL)
+    {
+        perror("Error opening file");
+        return;
+    }
+    int i = 0;
+    while (!feof(borrowFile))
+    {
+        fscanf(borrowFile, "%[^_]_%[^_]_%s\n", acc[i].nameAcc, dataBorrows[i].borrowTittle, dataBorrows[i].status);
+        i++;
+    }
+    int n = i;
+    headMessage2("List of borrower");
+    for ( i = 0; i < n; i++)
+    {
+        printf("\n\n\033[0;37m%38d. %s %10s %s\n", i+1, "Name", ":",acc[i].nameAcc);
+        printf("%46s %8s %s\n", "Title ", ":", dataBorrows[i].borrowTittle);
+        // printf("%47s %7s %s\n", "Status ", ":", dataBorrows[i].status);
+        if (strcmp("Returned", dataBorrows[i].status))
+        {
+            printf("%47s %7s \033[0;31m%s\n\033[0;37m", "Status ", ":", dataBorrows[i].status);
+        } else if (strcmp("Borrowed", dataBorrows[i].status))
+        {
+            printf("%47s %7s \033[1;32m%s\n\033[0;37m", "Status ", ":", dataBorrows[i].status);
+        }
+    }
+    backMenu();
+    fclose(borrowFile);
+}
+
 // Main menu library
 void menu(){
     headMessage();
@@ -497,9 +535,13 @@ void menu(){
         printf("%64s\n", "4. Borrow Books");
         printf("%64s\n", "5. Return Books");
         printf("%61s\n", "6. Add Books");
+        if (key == 1)
+        {
+            printf("\n%63s\n", "7. View borrow");
+        }
         if (key == 1 || key1 == 1)
         {
-            printf("\n%59s\n\n", "7. Log out");
+            printf("\n%59s\n\n", "8. Log out");
         }
         
         printf("%56s\033[0m\n", "0. Exit");
@@ -565,6 +607,9 @@ void menu(){
             }
             break;
         case 7:
+            viewBorrow();
+            break;
+        case 8:
             key = 0;
             key1 = 0;
             break;
