@@ -302,32 +302,189 @@ void addBooks(){
 
 // Search books module
 void searchBooks(){
-    FILE *fp = fopen("databaseBooks.txt", "r");
-    if (fp == NULL)
+    
+    int i = 0, j;
+    FILE* file =fopen("databaseBooks.txt","r");
+    if (file == NULL)
     {
         perror("Error opening file");
         return;
     }
-    
-    int found = 0; //flag to check if book found
-    char bookName[1000];
-    char searchInBooks[1000];
-    headMessage2("Search Books");
-    printf("\033[0;37m\n%69s", "What are you looking for : ");
-    scanf("%s", searchInBooks);
 
-    while(fgets(bookName, sizeof(bookName), fp)){
-        if(strstr(bookName, searchInBooks)){
-        printf("\n%45s %s", "Book found : ", bookName);
-        found = 1;
-        break;
-        }
+    while (!feof(file))
+    {
+        fscanf(file, "%[^_]_%[^_]_%ld_%lld_%s\n", dataBooks[i].title, dataBooks[i].author, &dataBooks[i].publication, &dataBooks[i].codeBooks, dataBooks[i].status);
+        i++;
     }
-    if(!found){
-        printf("\n%72s\n", "Book not found in the data base.");
+    int n = i;
+    quickSort(dataBooks, 0, n-1);
+
+    int option;
+
+    headMessage2("Search Book");
+    printf("\n\033[0;37m%65s\n", "1. Search by Book Title");
+    printf("%61s\n", "2. Search by Author");
+    printf("%69s\n", "3. Search by Date Published");
+    printf("%59s\n", "4. Search by ISBN");
+    printf("\n");
+    printf("%49s\n", "5. Back");
+    printf("\n\n\033[1;32m%63s","Enter option -> ");
+    scanf("%d", &option);
+    
+    char authorName[30];
+    char bookName[30];
+    long int datePublished;
+    long long int isbn;
+    
+    int result;
+    
+    switch(option) {
+
+        case 1:
+
+            printf("\n\033[0;37m%60s", "Enter book title : "); getchar();
+            scanf("%[^\n]", bookName);
+
+            int i;
+
+            for (i = 0; i < n; i++) {
+
+                result = 1;
+
+                for (j = 0; j < n; j++) {
+
+                    if (strstr(dataBooks[j].title, bookName)) {
+
+                        result = j;
+
+                        printf("\n\n\033[0;37m%38d. Title : %s\n", i+1,dataBooks[result].title);
+                        printf("%47s %10s %s\n", "Author ", ":", dataBooks[result].author);
+                        printf("%58s %ld\n", "Publication year :", dataBooks[result].publication);
+                        printf("%45s %12s %lld\n", "ISBN ", ":", dataBooks[result].codeBooks);
+
+                        strcpy(dataBooks[result].title, "!!");
+                        break;
+                    }
+                        
+                    else  {
+                        
+                        continue;
+                    }
+                }
+            }
+
+            backMenu();
+            break;
+
+        case 2:
+
+            printf("\n\033[0;37m%60s", "Enter Author : "); getchar();
+            scanf("%[^\n]", authorName);
+
+                for (i = 0; i < n; i++) {
+
+                result = 1;
+
+                for (j = 0; j < n; j++) {
+
+                    if (strstr(dataBooks[j].author, authorName)) {
+
+                        result = j;
+
+                        printf("\n\n\033[0;37m%38d. Title : %s\n", i+1,dataBooks[result].title);
+                        printf("%47s %10s %s\n", "Author ", ":", dataBooks[result].author);
+                        printf("%58s %ld\n", "Publication year :", dataBooks[result].publication);
+                        printf("%45s %12s %lld\n", "ISBN ", ":", dataBooks[result].codeBooks);
+
+                        strcpy(dataBooks[result].author, "!!");
+                        break;
+                    }
+                        
+                    else  {
+                        
+                        continue;
+                    }
+                }
+            }
+
+            backMenu();
+            break;
+
+        case 3:
+
+            printf("\n\033[0;37m%60s", "Enter Date Published : "); getchar();
+            scanf("%ld", &datePublished);
+
+                for (i = 0; i < n; i++) {
+
+                result = 1;
+
+                for (j = 0; j < n; j++) {
+
+                    if (dataBooks[j].publication == datePublished) {
+
+                        result = j;
+
+                        printf("\n\n\033[0;37m%38d. Title : %s\n", i+1,dataBooks[result].title);
+                        printf("%47s %10s %s\n", "Author ", ":", dataBooks[result].author);
+                        printf("%58s %ld\n", "Publication year :", dataBooks[result].publication);
+                        printf("%45s %12s %lld\n", "ISBN ", ":", dataBooks[result].codeBooks);
+
+                        dataBooks[result].publication = 0;
+                        break;
+                    }
+                        
+                    else  {
+                        
+                        continue;
+                    }
+                }
+            }
+
+            backMenu();
+            break;
+
+        case 4:
+
+            printf("\n\033[0;37m%75s", "Enter ISBN Number (Must Exactly the Same): "); getchar();
+            scanf("%lld", &isbn);
+
+                for (i = 0; i < n; i++) {
+
+                result = 1;
+
+                for (j = 0; j < n; j++) {
+
+                    if (dataBooks[j].codeBooks == isbn) {
+
+                        result = j;
+
+                        printf("\n\n\033[0;37m%38d. Title : %s\n", i+1,dataBooks[result].title);
+                        printf("%47s %10s %s\n", "Author ", ":", dataBooks[result].author);
+                        printf("%58s %ld\n", "Publication year :", dataBooks[result].publication);
+                        printf("%45s %12s %lld\n", "ISBN ", ":", dataBooks[result].codeBooks);
+
+                        dataBooks[result].codeBooks = 0;
+                        break;
+                    }
+                        
+                    else  {
+                        
+                        continue;
+                    }
+                }
+            }
+
+            backMenu();
+            break;
+
+        case 5:
+            break;
+
+        default:
+            printf("\n\n\n\033[0;31m%73s\n", "INVALID INPUT!!! Try again...");
+            break;
     }
-    backMenu();
-    fclose(fp);
 }
 
 // borrow books module
