@@ -1,4 +1,4 @@
-richard_The Self-taught Programmer_Returned
-richard_Spring in London_Returned
-richard_A tale of two cities_Returned
-brian_Harry Potter and the Sorcerer’s Stone_Borrowed
+richard_The Lean Start-up_Returned
+brian_Spring in London_Returned
+rich_The Self-taught Programmer_Returned
+rich_The Self-taught Programmer_Borrowed

@@ -10,3 +10,7 @@ Username : brian
 Password : 321
 ----------
 
+Username : rich
+Password : pass
+----------
+

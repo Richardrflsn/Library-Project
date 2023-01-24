@@ -16,6 +16,7 @@ void printMessageCenter(const char *message){
 }
 
 void headMessage(){
+    system("clear");
     printf("\t\t\t\t\033[0;35m__________________________________________________");
     printf("\n\n\033[1;37m%65s", "| Library in C |");
     printf("\n\t\t\t\t\033[0;35m__________________________________________________\033[0m");
@@ -40,6 +41,7 @@ void welcomeMessage(){
     printf("\n\t\t\t\t\033[0;31m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\033[0m\n");
     printf("\n\t\t\t\t Enter to continue.....");
     getchar();
+    system("clear");
 }
 
 void backMenu(){
@@ -50,6 +52,7 @@ void backMenu(){
     switch (option)
     {
     case 1:
+        system("clear");
         break;
     
     default:
@@ -479,6 +482,7 @@ void searchBooks(){
             break;
 
         case 5:
+            system("clear");
             break;
 
         default:
@@ -492,6 +496,7 @@ struct borrow
 {
     char status[1000];
     char borrowTitle[1000];
+    char account[1000];
 } borrows;
 
 void borrowBooks(){
@@ -532,7 +537,8 @@ void borrowBooks(){
                 printf("\n\n\033[0;37m%68s\n", "Book succesfully Borrowed");
                 strcpy(borrows.status, "Borrowed");
                 strcpy(dataBooks[i].status, "Unavailable");
-                fprintf(borrowData, "%s_%s_%s\n", logAccount.username, borrows.borrowTitle, borrows.status);
+                strcpy(borrows.account, logAccount.username);
+                fprintf(borrowData, "%s_%s_%s\n", borrows.account, borrows.borrowTitle, borrows.status);
                 break;
                 
             } else {
@@ -565,6 +571,7 @@ struct databorrow
 {
     char status[1000];
     char borrowTittle[1000];
+    char account[1000];
 } dataBorrows[100];
 
 void returnBooks() {
@@ -591,7 +598,7 @@ void returnBooks() {
 
     while (!feof(borrowData))
     {
-        fscanf(borrowData, "%[^_]_%[^_]_%s\n", logAccount.username, dataBorrows[j].borrowTittle, dataBorrows[j].status);
+        fscanf(borrowData, "%[^_]_%[^_]_%s\n", dataBorrows[j].account, dataBorrows[j].borrowTittle, dataBorrows[j].status);
         j++;
     }
 
@@ -633,7 +640,7 @@ void returnBooks() {
     }
     for (j = 0; j < m; j++)
     {
-        fprintf(borrowFile, "%s_%s_%s\n", logAccount.username, dataBorrows[j].borrowTittle, dataBorrows[j].status);
+        fprintf(borrowFile, "%s_%s_%s\n", dataBorrows[j].account, dataBorrows[j].borrowTittle, dataBorrows[j].status);
     }
     
 
@@ -705,6 +712,7 @@ void menu(){
         printf("\n\n\033[1;32m%63s", "Enter option -> ");
         scanf("%d", &option);
         printf("\033[0m");
+        system("clear");
         switch (option)
         {
         case 1:
