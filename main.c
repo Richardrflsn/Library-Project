@@ -266,7 +266,6 @@ void viewBooks(){
         
         
     }
-    backMenu();
     fclose(file);
 }
 
@@ -301,6 +300,54 @@ void addBooks(){
     printf("\n\n\033[1;32m%68s\n\033[0;37m", "Book added successfully!");
     backMenu();
     fclose(file);
+}
+
+//Delete books module
+void deleteBooks(){
+    char titleBooks[1000];
+    int found = 0, i = 0;
+    FILE *file = fopen("databaseBooks.txt", "r");
+    FILE *temp = fopen("temp.txt", "a+");
+    if (file == NULL)
+    {
+        perror("Error opening file");
+        return;
+    }
+    headMessage2("Delete Books");
+    fflush(stdin);
+    printf("\n\n\033[0;37m%50s", "Enter title : ");
+    scanf("%[^\n]", titleBooks);
+
+    while (!feof(file))
+    {
+        fscanf(file, "%[^_]_%[^_]_%ld_%lld_%s\n", dataBooks[i].title, dataBooks[i].author, &dataBooks[i].publication, &dataBooks[i].codeBooks, dataBooks[i].status);
+        i++;
+    }
+    int n = i;
+
+    for ( i = 0; i < n; i++)
+    {
+        if (strcmp(dataBooks[i].title, titleBooks) != 0)
+        {
+            fprintf(temp, "%s_%s_%ld_%lld_%s\n", dataBooks[i].title, dataBooks[i].author, dataBooks[i].publication, dataBooks[i].codeBooks, dataBooks[i].status);
+        } else
+        {
+            found = 1;
+        }
+    }
+    
+    fclose(file);
+    fclose(temp);
+    remove("databaseBooks.txt");
+    rename("temp.txt", "databaseBooks.txt");
+
+    if (found)
+    {
+            printf("\n\n\033[1;32m%68s\n\033[0;37m", "Book deleted successfully!");
+    } else
+    {
+        printf("\n\n\033[0;37m%65s\n", "Book not found!");
+    }
 }
 
 // Search books module
@@ -682,7 +729,6 @@ void viewBorrow(){
             printf("%47s %7s \033[1;32m%s\n\033[0;37m", "Status ", ":", dataBorrows[i].status);
         }
     }
-    backMenu();
     fclose(borrowFile);
 }
 
@@ -701,11 +747,12 @@ void menu(){
         printf("%61s\n", "6. Add Books");
         if (key == 1)
         {
-            printf("\n%63s\n", "7. View borrow");
+            printf("\n%64s", "7. Delete Books");
+            printf("\n%63s\n", "8. View borrow");
         }
         if (key == 1 || key1 == 1)
         {
-            printf("\n%59s\n\n", "8. Log out");
+            printf("\n%59s\n\n", "9. Log out");
         }
         
         printf("%56s\033[0m\n", "0. Exit");
@@ -737,6 +784,8 @@ void menu(){
             break;
         case 2:
             viewBooks();
+            backMenu();
+            system("clear");
             break;
         case 3:
             searchBooks();
@@ -772,9 +821,26 @@ void menu(){
             }
             break;
         case 7:
-            viewBorrow();
+            if (key == 1)
+            {
+                deleteBooks();
+            } else if (key == 0)
+            {
+                printf("\n\n\n\033[0;31m%68s\033[0;37m\n\n", "You don't have access");
+            }
             break;
         case 8:
+            if (key == 1)
+            {
+                viewBorrow();
+                backMenu();
+                system("clear");
+            } else if (key == 0)
+            {
+                printf("\n\n\n\033[0;31m%68s\033[0;37m\n\n", "You don't have access");
+            }
+            break;
+        case 9:
             key = 0;
             key1 = 0;
             break;

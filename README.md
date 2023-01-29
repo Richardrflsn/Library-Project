@@ -9,6 +9,7 @@ This project consists of several modules
 - Returning books
 - View borrow
 - Adding books
+- Deleting books
 - Log out
 
 To borrow books, you must log in first and also when returning the book. Normal accounts will not be able to add books and view borrow; only admin accounts can add books to the system. This program is C-based and should be accessed using an IDE that supports coloring.
